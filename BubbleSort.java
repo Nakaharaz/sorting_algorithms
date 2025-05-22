@@ -1,4 +1,5 @@
-import java.util.Arrays;
+
+import java.util.Arrays; // Necessário para copiar o array
 
 public class BubbleSort {
 
@@ -7,29 +8,20 @@ public class BubbleSort {
      *
      * @param arr O array de inteiros a ser ordenado.
      */
-
     public static void bubbleSort(int[] arr) {
-
         int n = arr.length;
+        boolean trocou;
 
         for (int i = 0; i < n - 1; i++) {
-            // Verifica se o array já está ordenado
-            // Se não houver trocas, o array já está ordenado
-            boolean trocou = false;
-
-            // Loop para comparar elementos vizinhos
-            // O(n - i - 1) é o número de comparações restantes
-            // O último elemento já está na posição correta
+            trocou = false;
             for (int j = 0; j < n - 1 - i; j++) {
-                // Compara os elementos vizinhos
                 if (arr[j] > arr[j + 1]) {
                     int temp = arr[j];
                     arr[j] = arr[j + 1];
                     arr[j + 1] = temp;
-                    trocou = true; // Indica que houve uma troca
+                    trocou = true;
                 }
             }
-
             if (!trocou) {
                 break;
             }
@@ -42,7 +34,6 @@ public class BubbleSort {
      * @param arr     O array a ser impresso.
      * @param message Uma mensagem a ser exibida antes do array.
      */
-
     public static void printArray(int[] arr, String message) {
         System.out.println(message);
         for (int i = 0; i < arr.length; i++) {
@@ -59,39 +50,42 @@ public class BubbleSort {
      * @param originalArray O array original a ser usado para os testes.
      */
     public static void runAndAverageBubbleSort(int[] originalArray) {
-        final int NUM_EXECUTIONS = 10;
+        final int NUM_EXECUTIONS = 100;
         long totalDuration = 0;
-        int[] sortedArray = null;
+        int[] sortedArray = null; // Para guardar o array ordenado da última execução
 
         System.out.println("Iniciando " + NUM_EXECUTIONS + " execuções do Bubble Sort...");
 
         for (int i = 0; i < NUM_EXECUTIONS; i++) {
+
+            // Cria uma cópia do array original para não modificar o original
+            // Isso é importante para garantir que cada execução do Bubble Sort
+            // comece com o mesmo array desordenado.
+
             int[] arrayForSorting = Arrays.copyOf(originalArray, originalArray.length);
 
             long startTime = System.nanoTime();
-            bubbleSort(arrayForSorting);
+            bubbleSort(arrayForSorting); // Executa o Bubble Sort na cópia
             long endTime = System.nanoTime();
 
             long duration = endTime - startTime;
             totalDuration += duration;
 
+            // Pega a última execução e printa
             if (i == NUM_EXECUTIONS - 1) {
                 sortedArray = arrayForSorting;
             }
-            System.out.println("Execução " + (i + 1) + ": " + duration + " nanossegundos.");
         }
 
         double averageDurationNanos = (double) totalDuration / NUM_EXECUTIONS;
-        double averageDurationMillis = averageDurationNanos / 1_000_000.0;
 
-        // Imprimir o array final (da última execução)
+        // Imprimir o array final (última execução)
         if (sortedArray != null) {
-            printArray(sortedArray, "\nArray após a última ordenação (formato final):");
+            printArray(sortedArray, "\nArray ordenado:");
         }
 
-        // Imprimir a média de tempo
-        System.out.println("\n--- Resumo ---");
-        System.out.printf("Média de tempo de execução (10 execuções): %.0f nanossegundos%n", averageDurationNanos);
-        System.out.printf("Média de tempo de execução (10 execuções): %.3f milissegundos%n", averageDurationMillis);
+        System.out.println("\n--- Bubble Sort---");
+        System.out.printf("Média de tempo de execução (%d execuções): %.1f nanosegundos%n", NUM_EXECUTIONS,
+                averageDurationNanos);
     }
 }
